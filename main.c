@@ -79,11 +79,11 @@ int main(int argc, const char * argv[]) {
             
             planar_to_interleave
             (
-             u,
-             v,
-             buffer,
-             frame_sz
-             );
+                u,
+                v,
+                buffer,
+                frame_sz
+            );
             
             write(fd_out, buffer, frame_sz / 2);
         }
