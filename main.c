@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,6 +34,10 @@ int main(int argc, const char * argv[]) {
     uint8_t *frame;
     uint8_t *buffer;
     
+    char *cp;
+    char output_file_name[256];
+
+    
     if (argc < 4)
     {
         printf("useage: %s [input_file] [width] [height]\n", argv[0]);
@@ -47,13 +52,19 @@ int main(int argc, const char * argv[]) {
     frame_sz    = 0;
     frame       = NULL;
     buffer      = NULL;
-    
+    cp          = NULL;
+    memset(output_file_name, 0, sizeof(output_file_name));
     
     // get input file name from comand line
     fd_in   = open(argv[1], O_RDONLY);
     
     // specify output file name
-    fd_out  = open("nv12.yuv", O_WRONLY | O_CREAT);
+    cp = strchr(argv[1], '.');
+    strncpy(output_file_name, argv[1], cp - argv[1]);
+    strcat(output_file_name, "_nv12");
+    strcat(output_file_name, cp);
+    
+    fd_out  = open(output_file_name, O_WRONLY | O_CREAT, S_IRUSR);
     
     width   = atoi(argv[2]);
     height  = atoi(argv[3]);
@@ -95,10 +106,12 @@ int main(int argc, const char * argv[]) {
         fflush(stdout);
     }
     
+    
     close(fd_in);
     close(fd_out);
     
-    printf("\n");
+    printf("Done\n");
+    printf("Output file: %s\n", output_file_name);
     
     return 0;
 }
