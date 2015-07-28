@@ -1,10 +1,11 @@
-sources = main.c 420ToNv12.c
+target  = 420ToNv12
+sources = main.c $(target).c
 objects = $(patsubst %.c,%.o,$(sources))
 CC = gcc
 OPTS = -Wall
 
-420ToNv12: $(objects)
+$(target): $(objects)
 	$(CC) $(OPTS) -o $@ $(objects)
 
 clean:
-	rm 420ToNv12 $(objects)
+	rm $(target) $(objects)
