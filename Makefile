@@ -4,8 +4,8 @@ objects = $(patsubst %.c,%.o,$(sources))
 CC = gcc
 OPTS = -Wall
 
-$(target): $(objects)
-	$(CC) $(OPTS) -o $@ $(objects)
+all: $(objects)
+	$(CC) $(OPTS) -o $(target) $(objects)
 
 clean:
-	rm $(target) $(objects)
+	$(RM) $(target) $(objects)
