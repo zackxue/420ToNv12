@@ -8,8 +8,6 @@
 
 #include <stdint.h>
 
-#include "420ToNv12.h"
-
 int planar_to_interleave
 (
   const uint8_t *u,

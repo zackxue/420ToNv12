@@ -6,10 +6,9 @@
 //  Copyright (c) 2015 Hank Lee. All rights reserved.
 //
 
-#ifndef ___20ToNv12___20ToNv12__
-#define ___20ToNv12___20ToNv12__
+#ifndef __420ToNv12__
+#define __420ToNv12__
 
-#include <stdio.h>
 
 int planar_to_interleave
 (
@@ -20,4 +19,4 @@ int planar_to_interleave
  );
 
 
-#endif /* defined(___20ToNv12___20ToNv12__) */
+#endif
