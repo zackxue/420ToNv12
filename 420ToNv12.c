@@ -10,10 +10,10 @@
 
 int planar_to_interleave
 (
-  const uint8_t *u,
-  const uint8_t *v,
-        uint8_t *u_et_v,
-        uint32_t frame_sz
+        uint32_t    frame_sz,
+        uint8_t    *u_et_v,
+  const uint8_t    *u,
+  const uint8_t    *v
 )
 {
     int i;

@@ -90,10 +90,10 @@ int main(int argc, const char * argv[]) {
             
             planar_to_interleave
             (
-                u,
-                v,
+                frame_sz,
                 buffer,
-                frame_sz
+                u,
+                v
             );
             
             write(fd_out, buffer, frame_sz / 2);
