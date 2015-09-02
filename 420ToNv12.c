@@ -10,7 +10,7 @@
 
 int planar_to_interleave
 (
-        uint32_t    frame_sz,
+        uint32_t    wxh,
         uint8_t    *u_et_v,
   const uint8_t    *u,
   const uint8_t    *v
@@ -18,7 +18,7 @@ int planar_to_interleave
 {
     int i;
     
-    for (i = 0; i < frame_sz / 4; i++)
+    for (i = 0; i < wxh / 4; i++)
     {
         uint8_t u_data = u[i];  // fetch u data
         uint8_t v_data = v[i];  // fetch v data

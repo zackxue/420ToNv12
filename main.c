@@ -19,8 +19,8 @@
 #include "420ToNv12.h"
 
 int main(int argc, const char * argv[]) {
-    int fd_in;
-    int fd_out;
+    int fd_rd;
+    int fd_wr;
     
     uint8_t *y;
     uint8_t *u;
@@ -29,10 +29,10 @@ int main(int argc, const char * argv[]) {
     
     uint32_t width;
     uint32_t height;
-    uint32_t frame_sz;
+    uint32_t wxh;
     
     uint8_t *frame;
-    uint8_t *buffer;
+    uint8_t *dst;
     
     char *cp;
     char output_file_name[256];
@@ -46,17 +46,17 @@ int main(int argc, const char * argv[]) {
     }
     
     
-    rd_sz       = 0;
-    width       = 0;
-    height      = 0;
-    frame_sz    = 0;
-    frame       = NULL;
-    buffer      = NULL;
-    cp          = NULL;
+    rd_sz   = 0;
+    width   = 0;
+    height  = 0;
+    wxh     = 0;
+    frame   = NULL;
+    dst     = NULL;
+    cp      = NULL;
     memset(output_file_name, 0, sizeof(output_file_name));
     
     // get input file name from comand line
-    fd_in   = open(argv[1], O_RDONLY);
+    fd_rd = open(argv[1], O_RDONLY);
     
     // specify output file name
     cp = strchr(argv[1], '.');
@@ -64,39 +64,44 @@ int main(int argc, const char * argv[]) {
     strcat(output_file_name, "_nv12");
     strcat(output_file_name, cp);
     
-    fd_out  = open(output_file_name, O_WRONLY | O_CREAT, S_IRUSR);
+    fd_wr = open
+            (
+             output_file_name,
+             O_WRONLY | O_CREAT,
+             S_IRUSR
+            );
     
     width   = atoi(argv[2]);
     height  = atoi(argv[3]);
     
-    frame_sz = width * height;
+    wxh = width * height;
     
-    frame = malloc(frame_sz * 3 / 2);
-    buffer = malloc(frame_sz / 2);
+    frame = malloc(wxh * 3 / 2);
+    dst = malloc(wxh / 2);
     
     y = frame;
-    u = y + frame_sz;
-    v = u + frame_sz / 4;
+    u = y + wxh;
+    v = u + wxh / 4;
     
     printf("Processing: ");
     
     while (1)
     {
-        rd_sz = read(fd_in, frame, frame_sz * 3 / 2);
+        rd_sz = read(fd_rd, frame, wxh * 3 / 2);
         
-        if (rd_sz == frame_sz * 3 / 2)
+        if (rd_sz == wxh * 3 / 2)
         {
-            write(fd_out, y, frame_sz);
+            write(fd_wr, y, wxh);
             
             planar_to_interleave
             (
-                frame_sz,
-                buffer,
+                wxh,
+                dst,
                 u,
                 v
             );
             
-            write(fd_out, buffer, frame_sz / 2);
+            write(fd_wr, dst, wxh / 2);
         }
         else
         {
@@ -107,8 +112,8 @@ int main(int argc, const char * argv[]) {
     }
     
     
-    close(fd_in);
-    close(fd_out);
+    close(fd_rd);
+    close(fd_wr);
     
     printf("Done\n");
     printf("Output file: %s\n", output_file_name);
