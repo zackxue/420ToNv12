@@ -13,10 +13,15 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <fcntl.h>
 #include <unistd.h>
 
 #include "420ToNv12.h"
+#define TIMING  1
+#if (TIMING)
+struct timeval tv1, tv2;
+#endif
 
 int main(int argc, const char * argv[]) {
     int fd_rd;
@@ -67,7 +72,7 @@ int main(int argc, const char * argv[]) {
     fd_wr = open
             (
              output_file_name,
-             O_WRONLY | O_CREAT,
+             O_WRONLY | O_CREAT | O_TRUNC,
              S_IRUSR
             );
     
@@ -92,7 +97,9 @@ int main(int argc, const char * argv[]) {
         if (rd_sz == wxh * 3 / 2)
         {
             write(fd_wr, y, wxh);
-            
+            #if (TIMING)
+            gettimeofday(&tv1, NULL);
+            #endif
             planar_to_interleave
             (
                 wxh,
@@ -100,7 +107,12 @@ int main(int argc, const char * argv[]) {
                 u,
                 v
             );
-            
+            #if (TIMING)
+            gettimeofday(&tv2, NULL);
+            printf ("Total time = %f seconds\n",
+            (double) (tv2.tv_usec - tv1.tv_usec) / 1000000 +
+            (double) (tv2.tv_sec - tv1.tv_sec));
+            #endif
             write(fd_wr, dst, wxh / 2);
         }
         else
